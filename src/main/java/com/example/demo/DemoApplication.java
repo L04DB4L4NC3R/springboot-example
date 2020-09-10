@@ -48,6 +48,21 @@ public class DemoApplication {
 	return "User Already Exists";
   }
 
+@PostMapping(path="login")
+  public @ResponseBody String loginUser (@RequestParam String email, @RequestParam String password) {
+
+	try {
+	String pw =	userRepository.findByEmail(email).getPassword();
+	if (pw.equals(password)) {
+	return "Successful!";
+	}
+		return "Wrong password";
+
+	} catch(NullPointerException e) {
+		return "User Not Found";
+	} 
+  }
+
   @GetMapping(path="/all")
   public @ResponseBody Iterable<User> getAllUsers() {
     // This returns a JSON or XML with the users
