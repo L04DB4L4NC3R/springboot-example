@@ -30,15 +30,22 @@ public class DemoApplication {
 	}
 
 
-	 @PostMapping(path="/add") // Map ONLY POST Requests
+	 @PostMapping(path="/signup") // Map ONLY POST Requests
   public @ResponseBody String addNewUser (@RequestParam String name
-      , @RequestParam String email) {
+      , @RequestParam String email, @RequestParam String password) {
 
-    User n = new User();
-    n.setName(name);
-    n.setEmail(email);
-    userRepository.save(n);
-    return "Saved";
+	try {
+		userRepository.findByEmail(email).getEmail();
+	} catch(NullPointerException e) {
+		User n = new User();
+		n.setName(name);
+		n.setEmail(email);
+		// not hashing as of now
+		n.setPassword(password);
+		userRepository.save(n);
+		return "Saved";
+	} 
+	return "User Already Exists";
   }
 
   @GetMapping(path="/all")
